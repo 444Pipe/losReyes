@@ -9,6 +9,20 @@
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Video del hero: asegurar autoplay en iOS/Android ----------
+     iOS bloquea autoplay en modo de bajo consumo; se reintenta al primer toque. */
+  const heroVideo = $('#heroVideo');
+  if (heroVideo) {
+    const tryPlay = () => {
+      const p = heroVideo.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    tryPlay();
+    ['touchstart', 'click'].forEach((ev) =>
+      document.addEventListener(ev, tryPlay, { once: true, passive: true })
+    );
+  }
+
   /* ---------- Preloader ---------- */
   const preloader = $('#preloader');
   const hidePreloader = () => {
@@ -138,7 +152,8 @@
     });
   }
 
-  /* ---------- Galería: arrastrar para hacer scroll ---------- */
+  /* ---------- Galería: arrastrar para hacer scroll ----------
+     Solo con mouse: en táctil (Android/iOS) el scroll nativo funciona mejor. */
   const scroller = $('#galleryScroller');
   if (scroller) {
     let isDown = false;
@@ -146,6 +161,7 @@
     let scrollStart = 0;
 
     scroller.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = true;
       startX = e.clientX;
       scrollStart = scroller.scrollLeft;
