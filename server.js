@@ -58,9 +58,11 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(filePath).toLowerCase();
     const type = MIME[ext] || 'application/octet-stream';
     const isHtml = ext === '.html';
+    // CSS/JS con cache corta (cambian con cada ajuste); imagenes y video largas
+    const isCode = ext === '.css' || ext === '.js';
     const headers = {
       'Content-Type': type,
-      'Cache-Control': isHtml ? 'no-cache' : 'public, max-age=86400',
+      'Cache-Control': isHtml ? 'no-cache' : isCode ? 'public, max-age=300' : 'public, max-age=86400',
       'Accept-Ranges': 'bytes',
     };
 

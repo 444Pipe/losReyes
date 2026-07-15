@@ -274,8 +274,9 @@ a { color: inherit; text-decoration: none; }
   margin: 14px 0 22px;
   letter-spacing: 0.01em;
 }
-/* Sin overflow:hidden ni sombras de blur grande:
-   en iOS Safari generan un recuadro oscuro sobre el video */
+/* Sin text-shadow en las lineas animadas: la animacion con fill
+   forwards deja el span en una capa compuesta permanente y la sombra
+   se rasteriza como un recuadro visible (iOS y tambien Chromium). */
 .hero__line { display: block; }
 .hero__line span {
   display: inline-block;
@@ -284,10 +285,7 @@ a { color: inherit; text-decoration: none; }
   animation: riseUp 0.9s var(--ease) 0.1s forwards;
 }
 .hero__line:nth-child(2) span { animation-delay: 0.25s; }
-.hero__line--accent span {
-  color: var(--amarillo);
-  text-shadow: 0 0 16px rgba(255, 223, 27, 0.4);
-}
+.hero__line--accent span { color: var(--amarillo); }
 @keyframes riseUp { to { transform: translateY(0); opacity: 1; } }
 
 .hero__subtitle {
